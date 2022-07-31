@@ -1,0 +1,66 @@
+/*
+@font-face {
+  font-family: 'OpenBaskerville';
+  src: url('/static/OpenBaskerville0053-Rd7W.otf');
+  font-weight: normal;
+  font-style: normal;
+} */
+
+main {
+	font-family: 'Libre Baskerville', serif;
+}
+
+.navigation ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    background-color: #CBB;
+}
+.navigation ul li {
+    float: left;
+}
+
+.navigation ul li a {
+    padding: 10px;
+}
+
+.document-navigation-column {
+    float: left;
+    font-size: 0.9em;
+    width: 25%;
+}
+
+.document-navigation-column ul {
+    list-style-type: none;
+    line-height: 2em;
+}
+
+.content-column {
+    float: left;
+    width: 72%;
+}
+
+li {
+    font-family: 'Libre Baskerville', serif;
+}
+
+p {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1em;
+    line-height: 1.4em;
+    /* color: green; */
+}
+
+h1 {
+/*    background-color: pink;  */
+    font-family: Merriweather, serif;
+    font-weight: 900;
+    font-size: 1.9em;
+}
+
+h2 {
+    font-family: Merriweather, serif;
+    font-weight: bold;
+    font-size: 1.25em;
+}

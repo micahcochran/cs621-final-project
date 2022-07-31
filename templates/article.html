@@ -1,0 +1,28 @@
+
+{# This renders the legal text with a navigation bar. #}
+
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="document-navigation-column">
+    <ul>
+    {% for idx, name in articles %}
+        <li><a href="{{ url_for('browse', b_id=idx) }}">{{ name }}</a></li>
+    {% endfor %}
+    </ul>
+</nav>
+
+<div class="content-column">
+    <h1> {{ article_name }}
+    <a href=""><img src="{{ url_for('static', filename='link_16px.png') }}"></a>
+    </h1>
+    {% for section in art_legal %}
+        <h2 class="legals" id="{{ section.subtype }}_{{ section.number }}"> {{ section.subtype }} {{ section.number }} - {{ section.subtitle }} 
+            <a href=""><img src="{{ url_for('static', filename='link_16px.png') }}"></a>
+        </h2>
+        {% for c in section.content %}
+            <p> {{ c }} </p>
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endblock %}

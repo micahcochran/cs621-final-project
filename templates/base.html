@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Legal Text Website</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	 <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+<!--	<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap" rel="stylesheet"> -->
+<!--	<link rel="stylesheet" type="text/css" href="static/constitution.css"> -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+	<header>
+		<!-- see Homework 1 for styling -->
+		<nav class="navigation">
+			<ul class="ul-navigation">
+			  <li><a href="index.html">Legal Text</a></li>
+			  <li><a href="#">Placeholder</a></li>
+			  <li><a href="#">Placeholder</a></li>
+			  <li><a href="#">Placeholder</a></li>
+			  <li><a href="#">Placeholder</a></li>
+			</ul>
+		</nav>
+	</header>
+    {% block content %}
+          
+    {% endblock %}
+</body>
+</html>
