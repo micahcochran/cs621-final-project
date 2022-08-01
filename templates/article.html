@@ -1,6 +1,8 @@
 
 {# This renders the legal text with a navigation bar. #}
 
+{# TODO onclick to copy to clipboard could be done in a more elegant way using more Javascript. #}
+
 {% extends "base.html" %}
 {% block content %}
 
@@ -13,12 +15,15 @@
 </nav>
 
 <div class="content-column">
-    <h1> {{ article_name }}
-    <a href=""><img src="{{ url_for('static', filename='link_16px.png') }}"></a>
+    <h1 id="start"> {{ article_name }}
+    <img src="{{ url_for('static', filename='link_16px.png') }}" title="Click to copy link"
+    onclick="navigator.clipboard.writeText(window.location.href +'#start')">
+    
     </h1>
     {% for section in art_legal %}
         <h2 class="legals" id="{{ section.subtype }}_{{ section.number }}"> {{ section.subtype }} {{ section.number }} - {{ section.subtitle }} 
-            <a href=""><img src="{{ url_for('static', filename='link_16px.png') }}"></a>
+            <img src="{{ url_for('static', filename='link_16px.png') }}" title="Click to copy link" 
+            onclick="navigator.clipboard.writeText(window.location.href +'#{{ section.subtype }}_{{ section.number }}')">
         </h2>
         {% for c in section.content %}
             <p> {{ c }} </p>

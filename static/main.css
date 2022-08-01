@@ -22,10 +22,14 @@ main {
 }
 
 .navigation ul li a {
+    font-family: sans-serif;
+    color: midnightblue;
     padding: 10px;
+    text-decoration: none;
 }
 
 .document-navigation-column {
+    background-color: #ddd;
     float: left;
     font-size: 0.9em;
     width: 25%;
@@ -34,6 +38,11 @@ main {
 .document-navigation-column ul {
     list-style-type: none;
     line-height: 2em;
+}
+
+.document-navigation-column a {
+    color: black;
+    text-decoration: none;
 }
 
 .content-column {
@@ -49,6 +58,7 @@ p {
     font-family: 'Libre Baskerville', serif;
     font-size: 1em;
     line-height: 1.4em;
+    margin-left: 2%;
     /* color: green; */
 }
 
@@ -57,10 +67,12 @@ h1 {
     font-family: Merriweather, serif;
     font-weight: 900;
     font-size: 1.9em;
+    margin-left: 1%;
 }
 
 h2 {
     font-family: Merriweather, serif;
     font-weight: bold;
     font-size: 1.25em;
+    margin-left: 1%;
 }
