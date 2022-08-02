@@ -1,5 +1,7 @@
 
-{# This renders the legal text with a navigation bar. #}
+{# This renders the legal text with a navigation bar.
+    This template provides for two levels deep content.
+    #}
 
 {# TODO onclick to copy to clipboard could be done in a more elegant way using more Javascript. #}
 
@@ -9,7 +11,7 @@
 <nav class="document-navigation-column">
     <ul>
     {% for idx, name in articles %}
-        <li><a href="{{ url_for('browse', b_id=idx) }}">{{ name }}</a></li>
+        <li><a href="{{ url_for('browse', doc_id=doc_id, b_id=idx) }}">{{ name }}</a></li>
     {% endfor %}
     </ul>
 </nav>

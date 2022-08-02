@@ -76,3 +76,9 @@ h2 {
     font-size: 1.25em;
     margin-left: 1%;
 }
+
+footer {
+    /* background-color: cornflowerblue; */
+    position: block;
+    width: 100%;
+}

@@ -16,16 +16,26 @@
 		<!-- see Homework 1 for styling -->
 		<nav class="navigation">
 			<ul class="ul-navigation">
-			  <li><a href="index.html">Legal Text</a></li>
-			  <li><a href="#">Placeholder</a></li>
+			  <li><a href="/">Legal Text</a></li>
+			  <li><a href="{{ url_for('browse', doc_id='alcons', b_id=0) }}">Alabama Constitution</a></li>
 			  <li><a href="#">Placeholder</a></li>
 			  <li><a href="#">Placeholder</a></li>
 			  <li><a href="#">Placeholder</a></li>
 			</ul>
+			<form action="{{ url_for('search', doc_id=doc_id) }}">
+				<input type="text" id="query" name="query">
+				<input type="submit" value="Search">
+			</form>
 		</nav>
 	</header>
     {% block content %}
           
     {% endblock %}
+	<footer>
+		<ul>
+			<li><a href="{{ url_for('login') }}">Log in</a></li>
+			<li><a href="{{ url_for('new_book')}}">New Book</a></li>
+		</ul>
+	</footer>
 </body>
 </html>
