@@ -5,7 +5,17 @@
 
 {# TODO onclick to copy to clipboard could be done in a more elegant way using more Javascript. #}
 
+{# moved search box to this template  #}
+
 {% extends "base.html" %}
+
+{% block searchbox %}
+<form action="{{ url_for('search', doc_id=doc_id) }}">
+    <input type="text" id="query" name="query">
+    <input type="submit" value="Search">
+</form>
+{% endblock %}
+
 {% block content %}
 
 <nav class="document-navigation-column">

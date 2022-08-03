@@ -26,10 +26,7 @@
 			  <li><a href="#">Placeholder</a></li>
 			  <li><a href="#">Placeholder</a></li> -->
 			</ul>
-			<form action="{{ url_for('search', doc_id=doc_id) }}">
-				<input type="text" id="query" name="query">
-				<input type="submit" value="Search">
-			</form>
+			{% block searchbox %} {% endblock %}
 		</nav>
 	</header>
     {% block content %}
