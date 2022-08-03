@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="settings">
+<h1 class="settings-eb">Create a New Book</h1>
+
+<form method="POST">
+    {{ newbook_form.hidden_tag() }}
+    {{ newbook_form.title.label }} {{ newbook_form.title() }} <br>
+    {{ newbook_form.collection.label }} {{ newbook_form.collection() }} <br>
+    <p>Note: Make the Collection short because it will be used in the URL.</p>
+    {{ newbook_form.submit() }}
+</form>
+</div>
+
+<p class="callout-info"> {{ message }} </p>
+
+{% endblock %}

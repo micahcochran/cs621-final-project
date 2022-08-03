@@ -2,25 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Text Website</title>
+    <title>Legal Text Website {% block subtitle %}{% endblock %} </title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	 <link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" rel="stylesheet"> 
 <!--	<link rel="stylesheet" type="text/css" href="static/constitution.css"> -->
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
 	<header>
-		<!-- see Homework 1 for styling -->
 		<nav class="navigation">
 			<ul class="ul-navigation">
 			  <li><a href="/">Legal Text</a></li>
-			  <li><a href="{{ url_for('browse', doc_id='alcons', b_id=0) }}">Alabama Constitution</a></li>
+			  {% for b in _books %}
+			  <li><a href="{{ url_for('browse', doc_id=b['collection'], b_id=0) }}">
+				{{b['title']}}</a></li>
+			  {% endfor %}
+			<!--  <li><a href="{{ url_for('browse', doc_id='alcons', b_id=0) }}">Alabama Constitution</a></li>
 			  <li><a href="#">Placeholder</a></li>
 			  <li><a href="#">Placeholder</a></li>
-			  <li><a href="#">Placeholder</a></li>
+			  <li><a href="#">Placeholder</a></li> -->
 			</ul>
 			<form action="{{ url_for('search', doc_id=doc_id) }}">
 				<input type="text" id="query" name="query">
