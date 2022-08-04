@@ -2,11 +2,14 @@
 old-Dockerfiles/
 __pycache__/
 submission/
+.vagrant/
+hi/
 
 # multiple files
 *.ipynb
 
 # single files
 ENVIRONMENT.txt
+hi.py
 mongo-backup/notes.md
 TODO
