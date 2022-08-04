@@ -7,9 +7,10 @@
 
 <form method="POST">
     {{ newbook_form.hidden_tag() }}
-    {{ newbook_form.title.label }} {{ newbook_form.title() }} <br>
-    {{ newbook_form.collection.label }} {{ newbook_form.collection() }} <br>
-    <p>Note: Make the Collection short because it will be used in the URL.</p>
+    <p class="settings"> {{ newbook_form.title.label }} {{ newbook_form.title() }} </p>
+    <p class="settings"> {{ newbook_form.collection.label }} {{ newbook_form.collection() }} </p>
+    <p class="settings"> Note: Make the Collection short because it will be used in the URL and
+         the name for the database. </p>
     {{ newbook_form.submit() }}
 </form>
 </div>

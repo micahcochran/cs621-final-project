@@ -41,21 +41,30 @@
 			  <li><a href="{{ url_for('browse', doc_id=b['collection'], b_id=0) }}">
 				{{b['title']}}</a></li>
 			  {% endfor %}
-			<!--  <li><a href="{{ url_for('browse', doc_id='alcons', b_id=0) }}">Alabama Constitution</a></li>
-			  <li><a href="#">Placeholder</a></li>
-			  <li><a href="#">Placeholder</a></li>
-			  <li><a href="#">Placeholder</a></li> -->
 			</ul>
 			{% block searchbox %} {% endblock %}
 		</nav>
 	</header>
+
     {% block content required %}
-          
+
     {% endblock %}
+
+	{# copied code from https://flask.palletsprojects.com/en/2.1.x/patterns/flashing/ #}
+	{% with messages = get_flashed_messages() %}
+  		{% if messages %}
+    		<ul class="flashes">
+    		{% for fl_msg in messages %}
+      			<li class="callout-info">{{ fl_msg }}</li>
+    		{% endfor %}
+    		</ul>
+  		{% endif %}
+	{% endwith %}
 	<footer>
 		<ul>
 			<li><a href="{{ url_for('login') }}">Log in</a></li>
 			<li><a href="{{ url_for('new_book')}}">New Book</a></li>
+			<li><a href="{{ url_for('settings')}}">Settings</a></li>
 		</ul>
 	</footer>
 </body>

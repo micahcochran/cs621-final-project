@@ -4,14 +4,15 @@
 from typing import Optional
 
 # external libraries
-from flask import Flask, redirect, render_template, request, session, url_for
-# TODO install flask_wtf
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import BooleanField, StringField, SubmitField
 from wtforms.validators import DataRequired # , Email
 
 # app library imports
-from database import db, add_book, has_book, get_books
+from database import (db, add_book, has_book, get_books, set_book_editable,
+                      delete_book, is_book_editable)
+
 
 app = Flask(__name__)
 
@@ -45,7 +46,8 @@ def login():
 # don't worry about length
 # * MongoDB's text search seems smart enough to pickup words that are similar
 #   so a search for 'declaration' also result in 'declaring' and other similar
-#   words.  More code would be needed on this end to properly deal with that. 
+#   words.  More code would be needed on this end to properly deal with that.
+# TODO: Return needs to be a dictionary. 
 def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
     """create a string snippet from a search record"""
     # do some preprocessing on results to create snippets of text search results
@@ -70,7 +72,7 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
         # section is a list of strings
         for section in art['content']:
             # for para in section:
-            print(type(section))
+            # print(type(section))
                 # if 'declaration' in para.lower():
                 #    print('MATCH')
             if query.lower() in section.lower():
@@ -114,7 +116,18 @@ def search(doc_id=None):
 
 @app.route('/settings')
 def settings():
-    pass
+    return render_template('settings.html', books=get_books(), \
+            is_book_editable=is_book_editable)
+
+
+@app.route('/set_tgl_bk_editable/<collection>')
+def set_tgl_bk_editable(collection):
+    # message = ''
+    # message = f"toggled collection '{collection}' editability"
+    flash(f"toggled collection '{collection}' editability")
+    set_book_editable(collection)
+    return render_template('settings.html', books=get_books()) # , message=message)
+
 
 class NewBookForm(FlaskForm):
    title = StringField("Title", validators=[DataRequired()])
@@ -124,27 +137,44 @@ class NewBookForm(FlaskForm):
 
 @app.route('/new_book', methods=['GET', 'POST'])
 def new_book():
-    message = ''
+    # message = ''
     newbook_form = NewBookForm()
     if newbook_form.validate_on_submit():
         title = newbook_form.title.data
         collection = newbook_form.collection.data
         success = add_book(collection, title)
         if success:
-            message = f'Added book: {title}'
+            # message = f'Added book: {title}'
+            flash(f'Added book: {title}')
         else:
-            message = f'Failed to add book.'
+            # message = 'Failed to add book.'
+            flash('Failed to add book.')
     
-    return lt_render_template('new_book.html', newbook_form=newbook_form, message=message)
+    return lt_render_template('new_book.html', newbook_form=newbook_form) # , message=message)
 
+class DeleteBookForm(FlaskForm):
+    complete_delete = BooleanField('Completely Delete Book from Database')
+    submit = SubmitField('Delete Book')
 
-# @app.route('/test1')
-# def test1():
-#    articles = db.legal_text.find()
-#    article_names = map(lambda a: list(a.keys())[1], articles)
-#    article_names = map(lambda a: a['title'], articles)
+@app.route('/set_delete_book/<collection>', methods=['GET', 'POST'])
+def set_delete_book(collection):
+    # message = ''
+    del_form = DeleteBookForm()
+    print(f'is_book_editable(collection): {is_book_editable(collection) }')
+    if not is_book_editable(collection):
+        flash(f'Cannot deleted "{collection}", not editable.  Go to settings to make editable.')
+        return redirect(url_for('settings'))
 
-#    return render_template("top.html", articles=enumerate(article_names))
+    if del_form.validate_on_submit():
+        delete_book(collection)
+        # message = f'Deleted "{collection}"'
+        flash(f'Deleted "{collection}"')
+        if del_form.complete_delete.data:
+            print("TODO: Completely delete the collection from the database.")
+    # else:
+        # message = f'Cannot deleted "{collection}", not editable.  Go to settings to make editable.'
+    # TODO retrieve the book for bk    
+    return lt_render_template('delete_book.html', bk=get_books(), del_form=del_form)
 
 
 # for browsing an article
@@ -185,4 +215,7 @@ def browse(doc_id=None, b_id=0):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+#    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)

@@ -2,7 +2,7 @@
 # functions. 
 
 # internal Python libraries
-from typing import Dict, List
+from typing import Dict, List, Optional
 # external libraries
 from pymongo import MongoClient
 
@@ -19,20 +19,6 @@ client = MongoClient(HOST, 27017)
 # db_collection = {'alcons': client.al_constitution }
 
 db = client.legal_text
-
-# there should be something like
-# legal_text.books
-#  
-# from MongoDB command line
-# db.book.insertOne({ 'collection' : 'alcons', 'title': "Alabama Constitution" });
-# title with abreviation should fill in the header
-# 
-# Put some functions in the footer. Add a new code book.
-
-# connect to the database -- FIXME database will need to be abstracted at some point.
-# db = client.al_constitution
-
-# get_books() 
 
 
 def get_books() -> List[Dict]:
@@ -68,4 +54,33 @@ def add_book(collection: str, title: str) -> bool:
         db.book.insert_one(doc)
         return True
     return False
+
+def set_book_editable(collection: str):
+    if has_book(collection):
+        # ASSUMPTION:  That this will only result in one record.
+        result = db.book.find_one({'collection' : collection})
+        edit_status = result.get('editable', False)
+#        update_result = result
+#        if not editable:
+#            update_result['editable'] = True
+#        else:
+#            update_result['editable'] = False
+#        db.book.update_one({'collection' : collection}, update_result)
+        db.book.update_one({'collection' : collection}, 
+                            {'$set' : {'editable' : not edit_status}})
+ 
+        print('ran set_book_editable()')
+
+
+def is_book_editable(collection: str) -> Optional[bool]:
+    """return True/False for editable and None if there is no such collection."""
+    if not has_book(collection):
+        return None
     
+    result = db.book.find_one({'collection' : collection})
+    return result.get('editable', False)
+
+
+def delete_book(collection: str):
+    if has_book(collection):
+        db.book.delete_one({'collection' : collection})

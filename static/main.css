@@ -92,6 +92,14 @@ footer {
 }
 
 .callout-info {
-    color: black;
     background-color: lightcyan;
+    color: black;
+    font-family: 'Inter', sans-serif;
+}
+
+/* flash should replace class callout-info */
+.flash {
+    background-color: lightcyan;
+    color: black;
+    font-family: 'Inter', sans-serif;
 }
