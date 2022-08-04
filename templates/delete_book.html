@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="settings">
+<h1 class="settings-eb">Delete a Book</h1>
+
+<form method="POST">
+    {{ del_form.hidden_tag() }}
+    <p class="settings"> Title: {{ bk.title }} </p>
+    <p class="settings"> Collection: {{ bk.collection }} </p>
+    <p class="settings"> {{ del_form.complete_delete.label }} {{ del_form.complete_delete() }}</p>
+    <p class="settings"> Click the button to confirm deletion: {{ del_form.submit() }}</p>
+</form>
+</div>
+
+<p class="callout-info"> {# message #} </p>
+
+{% endblock %}

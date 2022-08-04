@@ -10,7 +10,7 @@ from wtforms import BooleanField, StringField, SubmitField
 from wtforms.validators import DataRequired # , Email
 
 # app library imports
-from database import (db, add_book, has_book, get_books, set_book_editable,
+from database import (db, add_book, has_book, get_books, get_book, set_book_editable,
                       delete_book, is_book_editable)
 
 
@@ -122,11 +122,9 @@ def settings():
 
 @app.route('/set_tgl_bk_editable/<collection>')
 def set_tgl_bk_editable(collection):
-    # message = ''
-    # message = f"toggled collection '{collection}' editability"
     flash(f"toggled collection '{collection}' editability")
     set_book_editable(collection)
-    return render_template('settings.html', books=get_books()) # , message=message)
+    return render_template('settings.html', books=get_books())
 
 
 class NewBookForm(FlaskForm):
@@ -137,28 +135,24 @@ class NewBookForm(FlaskForm):
 
 @app.route('/new_book', methods=['GET', 'POST'])
 def new_book():
-    # message = ''
     newbook_form = NewBookForm()
     if newbook_form.validate_on_submit():
         title = newbook_form.title.data
         collection = newbook_form.collection.data
         success = add_book(collection, title)
         if success:
-            # message = f'Added book: {title}'
             flash(f'Added book: {title}')
         else:
-            # message = 'Failed to add book.'
             flash('Failed to add book.')
     
-    return lt_render_template('new_book.html', newbook_form=newbook_form) # , message=message)
+    return lt_render_template('new_book.html', newbook_form=newbook_form)
 
 class DeleteBookForm(FlaskForm):
-    complete_delete = BooleanField('Completely Delete Book from Database')
+    complete_delete = BooleanField('Completely Delete Book from Database?')
     submit = SubmitField('Delete Book')
 
 @app.route('/set_delete_book/<collection>', methods=['GET', 'POST'])
 def set_delete_book(collection):
-    # message = ''
     del_form = DeleteBookForm()
     print(f'is_book_editable(collection): {is_book_editable(collection) }')
     if not is_book_editable(collection):
@@ -167,14 +161,15 @@ def set_delete_book(collection):
 
     if del_form.validate_on_submit():
         delete_book(collection)
-        # message = f'Deleted "{collection}"'
         flash(f'Deleted "{collection}"')
         if del_form.complete_delete.data:
             print("TODO: Completely delete the collection from the database.")
+        
+        return redirect(url_for('settings'))
     # else:
         # message = f'Cannot deleted "{collection}", not editable.  Go to settings to make editable.'
     # TODO retrieve the book for bk    
-    return lt_render_template('delete_book.html', bk=get_books(), del_form=del_form)
+    return lt_render_template('delete_book.html', bk=get_book(collection), del_form=del_form)
 
 
 # for browsing an article

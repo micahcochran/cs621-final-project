@@ -84,3 +84,7 @@ def is_book_editable(collection: str) -> Optional[bool]:
 def delete_book(collection: str):
     if has_book(collection):
         db.book.delete_one({'collection' : collection})
+
+
+def get_book(collection: str) -> dict:
+    return db.book.find_one({'collection' : collection})
