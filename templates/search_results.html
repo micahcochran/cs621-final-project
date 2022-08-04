@@ -1,0 +1,25 @@
+{# Search needs a lot of work.
+    Ideally the search results would be sorted by importance of matches,
+    so titles being most important, subtitles being next, and then the number
+    of occurances in the text. #}
+
+{% extends "base.html" %}
+
+{% block subtitle %}- Search Results{% endblock %}
+
+{% block content %}
+
+<h1> Search results </h1>
+<p>{{ num_results }} results for: <b>{{ query | lower }}</b></p>
+<ul>
+    {% for row in snip_results %}
+        {# if query | lower in row['title'] | lower #}
+        {#    <li> <b> {{ row['title'] }} </b> </li> #}
+        {# else #}
+        {#     <li><code>{{ row }}</code></li> #}
+        {# endif #}
+        <li>{{ row }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

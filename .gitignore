@@ -2,7 +2,9 @@
 old-Dockerfiles/
 __pycache__/
 submission/
+
 # multiple files
+*.ipynb
 
 # single files
 ENVIRONMENT.txt

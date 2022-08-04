@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# internal libraries
+from typing import Optional
+
 # external libraries
 from flask import Flask, redirect, render_template, request, session, url_for
 # TODO install flask_wtf
@@ -33,14 +36,80 @@ def index():
 def login():
     return "This is a placeholder for a login form."
 
+# NOTE: This prioritizes the first match of most importance, not a "best" match per say.
+# * Link is not created, just need to figure out the article's number, shouldn't this 
+# enumeration be stored in the database. Store b_id.
+# * Can HTML be passed to jinja for links?
+# the links can be mostly built like it is built in the article.html
+# * NOTE: As written, this function will have to be configured per book.
+# don't worry about length
+# * MongoDB's text search seems smart enough to pickup words that are similar
+#   so a search for 'declaration' also result in 'declaring' and other similar
+#   words.  More code would be needed on this end to properly deal with that. 
+def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
+    """create a string snippet from a search record"""
+    # do some preprocessing on results to create snippets of text search results
+    # prioritize titles
+    if query.lower() in rec['title'].lower():
+        return rec['title']
+    
+    # print(f'rec.keys(): {rec.keys()}')
+    # print(f'rec' {rec})
+
+    # look at the articles/amendments for their subtitles
+    for art in rec['legal']:
+        # print(f"type(section) {type(section)}")
+        # print(f"art {art}")
+        # print(f'rec.keys(): {rec.keys()}')
+        # print(f'isinstance(art, dict): {isinstance(art, dict)}')
+        if isinstance(art, dict) and query.lower() in art['subtitle'].lower():
+            return f"{art['subtype']} {art['number']} - {art['subtitle']}"
+
+    # look for a match in the contents
+    for art in rec['legal']:
+        # section is a list of strings
+        for section in art['content']:
+            # for para in section:
+            print(type(section))
+                # if 'declaration' in para.lower():
+                #    print('MATCH')
+            if query.lower() in section.lower():
+                # return f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + section
+                half_snip = (snippet_length - len(query)) // 2
+                idx = section.find(query)
+                if idx - half_snip < 0:
+                    b_idx = 0
+                else:
+                    b_idx = idx - half_snip
+                t_idx = idx + len(query) + half_snip
+                
+                return  f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + \
+                        f"…{section[b_idx:t_idx]}…"
+
+    # fallthrough, return nothing
+    return None
+
+# TODO: need some way to create a link to the content.
+# Perhaps use javascript to do keyword highlighting?
 @app.route('/search/<doc_id>')
 def search(doc_id=None):
     if doc_id is None or not has_book(doc_id):
         return "Sorry, I had a problem finding that legal text."
 
     query = request.args.get("query")
+    # mongodb does good first level of search results
+    cursor = db[doc_id].find({'$text': {'$search': query}})
+    results = list(cursor)
+    # num_results = len(results)
 
-    return f"This is plumbing for search.  What you searched for was this '{query}' from the document '{doc_id}'."
+    # create snippets from search results, removing results that are None values
+    snip_results = list(filter(lambda x: x is not None, 
+                            map(lambda r: search_snippet(r,query), results)))
+#    snip_results = list(map(lambda r: search_snippet(r,query), results))
+    num_results = len(snip_results)
+    return lt_render_template('search_results.html', query=query, 
+                                snip_results=snip_results, num_results=num_results)
+    # return f"This is plumbing for search.  What you searched for was this '{query}' from the document '{doc_id}'."
 
 
 @app.route('/settings')
