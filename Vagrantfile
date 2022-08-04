@@ -74,6 +74,6 @@ Vagrant.configure("2") do |config|
      # install requirements using pip
      pip3 install -r /home/vagrant/legal_text/requirements.txt
      # restore the database
-     mongorestore --db legal_text /home/vagrant/mongo-backup/dump/legal_text/
+     mongorestore --db legal_text /home/vagrant/legal_text/mongo-backup/dump/legal_text/
   SHELL
 end
