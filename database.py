@@ -9,14 +9,10 @@ from pymongo import MongoClient
 
 
 # docker
-# HOST = '172.17.0.2'
+# HOST = '172.17.0.2'   # If storing MongoDB on a Docker container.
 HOST = 'localhost'
 
 client = MongoClient(HOST, 27017)
-
-# these are the database collections of the different legal codes
-# TODO: this should be configurable from mongodb
-# db_collection = {'alcons': client.al_constitution }
 
 db = client.legal_text
 
@@ -38,13 +34,6 @@ def add_book(collection: str, title: str) -> bool:
     # Ensure 1. there are names for the collection and title
     #        2. The collection name doesn't already exist
     #        3. There isn't a document in the book collection with this collection attribute.
-    # print(f"collection {collection}")
-    # print(f"title {title}")
-    # print(f"collection not in db.list_collections(): {collection not in db.list_collections()}")
-    # _ot_evaluate = db.book.find_one({'collection': collection}) is not None
-    # print(f"db.book.find_one...is not None: {_ot_evaluate}")
-    # _ot_res = db.book.find_one({'collection': collection})
-    # print(f'db.book.find_one: {_ot_res}')
     if collection and title \
        and collection not in db.list_collections() \
        and db.book.find_one({'collection': collection}) is None:
@@ -60,12 +49,7 @@ def set_book_editable(collection: str):
         # ASSUMPTION:  That this will only result in one record.
         result = db.book.find_one({'collection' : collection})
         edit_status = result.get('editable', False)
-#        update_result = result
-#        if not editable:
-#            update_result['editable'] = True
-#        else:
-#            update_result['editable'] = False
-#        db.book.update_one({'collection' : collection}, update_result)
+
         db.book.update_one({'collection' : collection}, 
                             {'$set' : {'editable' : not edit_status}})
  

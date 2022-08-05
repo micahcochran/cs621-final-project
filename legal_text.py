@@ -43,16 +43,9 @@ def index():
 
 # Function that returns snippets for search.
 # NOTE: This prioritizes the first match of most importance, not a "best" match per say.
-# * Link is not created, just need to figure out the article's number, shouldn't this 
-# enumeration be stored in the database. Store b_id.
-# * Can HTML be passed to jinja for links?
-# the links can be mostly built like it is built in the article.html
-# * NOTE: As written, this function will have to be configured per book.
-# don't worry about length
 # * MongoDB's text search seems smart enough to pickup words that are similar
 #   so a search for 'declaration' also result in 'declaring' and other similar
 #   words.  More code would be needed on this end to properly deal with that.
-# TODO: Return needs to be a dictionary. 
 def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[dict]:
     """create a string snippet from a search record"""
     # do some preprocessing on results to create snippets of text search results
@@ -63,17 +56,10 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[dict]:
         result['art_number'] = rec['number']
         return result
     
-    # print(f'rec.keys(): {rec.keys()}')
-    # print(f'rec' {rec})
-
     # look at the articles/amendments for their subtitles
     for art in rec['legal']:
-        # print(f"type(section) {type(section)}")
-        # print(f"art {art}")
-        # print(f'rec.keys(): {rec.keys()}')
-        # print(f'isinstance(art, dict): {isinstance(art, dict)}')
+
         if isinstance(art, dict) and query.lower() in art['subtitle'].lower():
-#            return f"{art['subtype']} {art['number']} - {art['subtitle']}"
             result['title'] = f"{art['subtype']} {art['number']} - {art['subtitle']}"
             result['art_number'] = rec['number']
             result['fragment'] = f"{art['subtype']}_{art['number']}"
@@ -81,26 +67,18 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[dict]:
 
     # look for a match in the contents
     for art in rec['legal']:
-        # section is a list of strings
+        # NOTE: section is a list of strings
         for section in art['content']:
-            # for para in section:
-            # print(type(section))
-                # if 'declaration' in para.lower():
-                #    print('MATCH')
             if query.lower() in section.lower():
-                # print(f"query: {query}\n section {section}")
-                # return f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + section
                 half_snip = (snippet_length - len(query)) // 2
                 idx = section.find(query.lower())
-                # print(f"idx: {idx}")
+
                 if idx - half_snip < 0:
                     b_idx = 0
                 else:
                     b_idx = idx - half_snip
                 t_idx = idx + len(query) + half_snip
                 
-#                return  f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + \
-#                        f"…{section[b_idx:t_idx]}…"
                 result['title'] = f"{art['subtype']} {art['number']} - {art['subtitle']}"
                 result['art_number'] = rec['number']
                 result['fragment'] = f"{art['subtype']}_{art['number']}"
@@ -136,7 +114,7 @@ def search(doc_id=None):
     # create snippets from search results, removing results that are None values
     sch_results = list(filter(lambda x: x is not None, 
                             map(lambda r: search_snippet(r,query), results)))
-#    snip_results = list(map(lambda r: search_snippet(r,query), results))
+
     num_results = len(sch_results)
     return lt_render_template('search_results.html', query=query, 
                                 sch_results=sch_results, num_results=num_results,
@@ -213,9 +191,7 @@ def set_delete_book(collection):
             flash("and also entirely deleted the data in the database.")
         
         return redirect(url_for('settings'))
-    # else:
-        # message = f'Cannot deleted "{collection}", not editable.  Go to settings to make editable.'
-    # TODO retrieve the book for bk    
+
     return lt_render_template('delete_book.html', bk=get_book(collection), del_form=del_form)
 
 
@@ -228,22 +204,16 @@ def browse(doc_id=None, b_id=0):
         article_names = map(lambda a: a['title'], articles)
         return enumerate(article_names)
 
-#    print(f"DOC: {doc_id}, B_ID: {b_id}")
-#   print(f"doc not in db_collection {doc not in db_collection}")
     if doc_id is None or b_id is None or not has_book(doc_id):
         return "Sorry, I had a problem finding that legal text"
     
-    # db[doc_id]
-
     articles = db[doc_id].find()
-#    article_names = list(map(lambda a: list(a.keys())[1], articles))
+
     article_names = tuple(map(lambda a: a['title'], articles))
-    # redo because map modifies the state of articles
+    # redo call because map modifies the state of articles
     articles = db[doc_id].find()
     legals = tuple(map(lambda a: a['legal'], articles))
-#    print(f'len(article_names): {len(article_names)}')
-#    print(f'len(legals): {len(legals)}')
-    # TODO: Should I protect for an IndexError
+
     try:
         article_name = article_names[int(b_id)]
     except IndexError as err:
@@ -251,13 +221,7 @@ def browse(doc_id=None, b_id=0):
         return redirect(url_for('index'))
 
     legal = legals[int(b_id)]
-#    print(article_name)
-#   
-#    print(legal)
-    # article_name = list(article.keys())[1]
-    # return article[article_name]
-    # return render_template()
-    # art_legal is a list of dictionaries representing the section text.
+
     return lt_render_template('article.html', article_name=article_name, art_legal=legal, 
                             articles=get_article_names_enumerated(db), doc_id=doc_id,
                             title=get_book_title(doc_id))
@@ -294,13 +258,11 @@ class LoginForm(FlaskForm):
 @app.route('/login', methods=['GET', 'POST'])
 def login() -> str:
     if 'username' in session and session['username']:
-        # return render_template('secretPage.html')
         return redirect(url_for('index'))
 
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        # print('login_form submittal')
         username = login_form.username.data
         password = login_form.password.data
         users = User.query.filter(User.username == username).all()
@@ -352,7 +314,6 @@ def signup():
     signup_form = RegisterForm()
 
     if signup_form.validate_on_submit():
-#        print("signup_form.validate_on_submit() ran")
         email = signup_form.email.data
         password = signup_form.password.data
         confirm_password = signup_form.confirm_password.data
