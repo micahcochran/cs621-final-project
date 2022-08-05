@@ -12,8 +12,21 @@
 <h1> Search results </h1>
 <p>{{ num_results }} results for: <b>{{ query | lower }}</b></p>
 <ul>
-    {% for row in snip_results %}
-        <li>{{ row }}</li>
+    {% for res in sch_results %}
+        {# <code> {# res } </code> #}
+        {% if res['title'] and res['art_number'] > -1 %}
+        <li class="search-result">
+            {% if res['fragment'] %}
+                <a href="{{url_for('browse', doc_id=doc_id, b_id=res['art_number']) }}#{{ res['fragment'] }}">
+            {% else %}
+                <a href="{{url_for('browse', doc_id=doc_id, b_id=res['art_number']) }}">
+            {% endif %}
+            <h4> {{ res['title'] }} </h4></a>
+            {% if res['context'] %}
+                <p> {{ res['context'] }}</p>
+            {% endif %}
+        </li>
+        {% endif %}
     {% endfor %}
 </ul>
 

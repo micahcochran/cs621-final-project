@@ -107,3 +107,14 @@ footer {
    /* background-color: salmon; */
     font-size: large;
 }
+
+.search-result {
+    background-color: #eee;
+    list-style-type: none;
+    text-decoration: none;
+    width: 80%;
+}
+
+.search-result a {
+    color: midnightblue;
+}

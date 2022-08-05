@@ -41,7 +41,7 @@ def index():
     return lt_render_template('index.html')
 
 
-# Function that gives bac snippets for search.
+# Function that returns snippets for search.
 # NOTE: This prioritizes the first match of most importance, not a "best" match per say.
 # * Link is not created, just need to figure out the article's number, shouldn't this 
 # enumeration be stored in the database. Store b_id.
@@ -53,12 +53,15 @@ def index():
 #   so a search for 'declaration' also result in 'declaring' and other similar
 #   words.  More code would be needed on this end to properly deal with that.
 # TODO: Return needs to be a dictionary. 
-def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
+def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[dict]:
     """create a string snippet from a search record"""
     # do some preprocessing on results to create snippets of text search results
     # prioritize titles
+    result = {}
     if query.lower() in rec['title'].lower():
-        return rec['title']
+        result['title'] = rec['title']
+        result['art_number'] = rec['number']
+        return result
     
     # print(f'rec.keys(): {rec.keys()}')
     # print(f'rec' {rec})
@@ -70,7 +73,11 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
         # print(f'rec.keys(): {rec.keys()}')
         # print(f'isinstance(art, dict): {isinstance(art, dict)}')
         if isinstance(art, dict) and query.lower() in art['subtitle'].lower():
-            return f"{art['subtype']} {art['number']} - {art['subtitle']}"
+#            return f"{art['subtype']} {art['number']} - {art['subtitle']}"
+            result['title'] = f"{art['subtype']} {art['number']} - {art['subtitle']}"
+            result['art_number'] = rec['number']
+            result['fragment'] = f"{art['subtype']}_{art['number']}"
+            return result
 
     # look for a match in the contents
     for art in rec['legal']:
@@ -81,17 +88,32 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
                 # if 'declaration' in para.lower():
                 #    print('MATCH')
             if query.lower() in section.lower():
+                # print(f"query: {query}\n section {section}")
                 # return f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + section
                 half_snip = (snippet_length - len(query)) // 2
-                idx = section.find(query)
+                idx = section.find(query.lower())
+                # print(f"idx: {idx}")
                 if idx - half_snip < 0:
                     b_idx = 0
                 else:
                     b_idx = idx - half_snip
                 t_idx = idx + len(query) + half_snip
                 
-                return  f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + \
-                        f"…{section[b_idx:t_idx]}…"
+#                return  f"{art['subtype']} {art['number']} - {art['subtitle']}<br>" + \
+#                        f"…{section[b_idx:t_idx]}…"
+                result['title'] = f"{art['subtype']} {art['number']} - {art['subtitle']}"
+                result['art_number'] = rec['number']
+                result['fragment'] = f"{art['subtype']}_{art['number']}"
+
+                # add ellipsis … when not at the beginning or end of the section
+                result['context'] = ''
+                if b_idx != 0:
+                    result['context'] += '…'
+                result['context'] += f"…{section[b_idx:t_idx]}"
+                if t_idx != len(section):
+                    result['context'] += '…'
+
+                return result
 
     # fallthrough, return nothing
     return None
@@ -99,7 +121,7 @@ def search_snippet(rec, query: str, snippet_length:int=400) -> Optional[str]:
 # TODO: need some way to create a link to the content.
 # Perhaps use javascript to do keyword highlighting?
 @app.route('/search/<doc_id>')
-def search(doc_id=None):
+def search(doc_id=None):   
     if doc_id is None or not has_book(doc_id):
         return "Sorry, I had a problem finding that legal text."
 
@@ -107,16 +129,18 @@ def search(doc_id=None):
     # mongodb does good first level of search results
     cursor = db[doc_id].find({'$text': {'$search': query}})
     results = list(cursor)
-    # num_results = len(results)
+
+    # ensure that this database has an index 
+    db[doc_id].create_index([('$**', 'text')])
 
     # create snippets from search results, removing results that are None values
-    snip_results = list(filter(lambda x: x is not None, 
+    sch_results = list(filter(lambda x: x is not None, 
                             map(lambda r: search_snippet(r,query), results)))
 #    snip_results = list(map(lambda r: search_snippet(r,query), results))
-    num_results = len(snip_results)
+    num_results = len(sch_results)
     return lt_render_template('search_results.html', query=query, 
-                                snip_results=snip_results, num_results=num_results)
-    # return f"This is plumbing for search.  What you searched for was this '{query}' from the document '{doc_id}'."
+                                sch_results=sch_results, num_results=num_results,
+                                doc_id=doc_id)
 
 
 @app.route('/settings')
@@ -163,6 +187,7 @@ def new_book():
             flash('Failed to add book.')
     
     return lt_render_template('new_book.html', newbook_form=newbook_form)
+
 
 class DeleteBookForm(FlaskForm):
     complete_delete = BooleanField('Completely Delete Book from Database?')
@@ -363,8 +388,8 @@ def logout():
     flash('User is now logged out.')
     return redirect(url_for('index'))
 
-def init_db() -> bool:
-    """Initialize the database, returns True - created the database, False - database already exists"""
+def init_user_db() -> bool:
+    """Initialize the user database, returns True - created the database, False - database already exists"""
     if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
         print('Creating the database.')
         user_db.create_all()
@@ -375,9 +400,9 @@ def init_db() -> bool:
         return True
     return False
 
-# Check for the database's existence, if it doesn't exist create the database.
+# Check for the user database's existence, if it doesn't exist create the database.
 # This is intentionally initialized so that init_db() is defined and ran before __main__.
-init_db()
+init_user_db()
 
 ####### END OF REGISTRATION AND LOGIN CODE ##########################
 
