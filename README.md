@@ -24,6 +24,8 @@ Go to the console and run the following commands
 vagrant up
 ```
 
+Vagrant will prompt for a network interface to bridge to.
+
 ```bash
 vagrant ssh
 ```
