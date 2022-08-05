@@ -54,9 +54,9 @@
 	{# copied code from https://flask.palletsprojects.com/en/2.1.x/patterns/flashing/ #}
 	{% with messages = get_flashed_messages() %}
   		{% if messages %}
-    		<ul class="flashes">
+    		<ul>
     		{% for fl_msg in messages %}
-      			<li class="callout-info">{{ fl_msg }}</li>
+      			<li class="flash">{{ fl_msg }}</li>
     		{% endfor %}
     		</ul>
   		{% endif %}

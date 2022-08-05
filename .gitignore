@@ -4,6 +4,7 @@ __pycache__/
 submission/
 .vagrant/
 hi/
+mongo-backup/backup-2022-08-05/
 
 # multiple files
 *.ipynb

@@ -209,7 +209,8 @@ def set_delete_book(collection):
         delete_book(collection)
         flash(f'Deleted "{collection}"')
         if del_form.complete_delete.data:
-            print("TODO: Completely delete the collection from the database.")
+            db.drop_collection(collection)
+            flash("and also entirely deleted the data in the database.")
         
         return redirect(url_for('settings'))
     # else:
