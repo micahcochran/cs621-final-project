@@ -23,7 +23,12 @@
         <tr>
             <td> {{ bk.title }} </td>
             <td> {{ bk.collection }} </td>
-            <td> {{ bk.editable }} </td>
+            {% if bk.editable %}
+                <td> {{ bk.editable }} - 
+                <a href="{{ url_for('edit', collection=bk.collection) }}">Edit</a></td>
+            {% else %}
+               <td> {{ bk.editable }} </td>
+            {% endif %}
             <td><button onClick=
                 "parent.location='{{ url_for('set_tgl_bk_editable', collection=bk.collection)}}'">
                 Toggle Editable</button></td>

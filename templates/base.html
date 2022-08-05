@@ -9,7 +9,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" rel="stylesheet"> 
-<!--	<link rel="stylesheet" type="text/css" href="static/constitution.css"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@700&display=swap" rel="stylesheet">
+
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
 	<!-- favicon start -->
@@ -62,10 +63,17 @@
 	{% endwith %}
 	<footer>
 		<ul>
-			<li><a href="{{ url_for('login') }}">Log in</a></li>
+			{% if session['username'] %}
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
 			<li><a href="{{ url_for('new_book')}}">New Book</a></li>
 			<li><a href="{{ url_for('settings')}}">Settings</a></li>
+			{% else %}
+			<li><a href="{{ url_for('login') }}">Log in</a></li>
+			{% endif %}
 		</ul>
+		{% if session['username'] %}
+			<p>{{ session['username'] }} is logged in</p> 
+		{% endif %}
 	</footer>
 </body>
 </html>

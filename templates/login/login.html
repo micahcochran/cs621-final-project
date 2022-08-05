@@ -1,0 +1,25 @@
+{# This page is a user login form. #}
+
+{% extends "base.html" %}
+
+{% block subtitle %} — Login {% endblock %}
+
+{% block content %}
+
+<main class="settings">
+    <h1 class="settings-eb">Login to Your Account</h1>
+    
+    <form method="POST">
+        {{ login_form.hidden_tag() }}
+        <table>
+        <tr> <td> {{ login_form.username.label }}</td> <td>{{ login_form.username() }} </td> </tr>    
+        <tr> <td> {{ login_form.password.label }}</td> <td>{{ login_form.password() }} </td> </tr>
+        </table>   
+        {{ login_form.submit() }}
+    </form>
+
+<p class="settings"> Not a member yet? <a href="{{ url_for('signup') }}">Create an Account</a> <p>
+
+</main>
+
+{% endblock %}

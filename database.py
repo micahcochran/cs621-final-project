@@ -88,3 +88,6 @@ def delete_book(collection: str):
 
 def get_book(collection: str) -> dict:
     return db.book.find_one({'collection' : collection})
+
+def get_book_title(collection: str) -> str:
+    return db.book.find_one({'collection' : collection})['title']

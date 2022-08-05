@@ -5,6 +5,8 @@
 
 <p>This is the legal text website.  Please view the content.  Choose one the Legal texts to view.</p>
 
-<p><a href="{{ url_for('login') }}">Log in</a> for more functionality.</p>
+{% if not session['username'] %}
+    <p><a href="{{ url_for('login') }}">Log in</a> for more functionality.</p>
+{% endif %}
 
 {% endblock %}

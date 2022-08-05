@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block subtitle %} — Edit — {{ title }} {% endblock %}
+
+{% block content %}
+
+<div class="settings">
+    <h1 class="settings-eb">Edit Book</h1>
+    <p class="settings">Content is separated into AsciiDoc headings which begin with equal signs =.
+        <a href="https://docs.asciidoctor.org/asciidoc/latest/sections/titles-and-levels/">Example</a>
+    </p> 
+
+    <form method="POST">
+        <p>{{ edit_form.submit() }}</p>
+        {{ edit_form.hidden_tag() }}
+        <p class="edit-content"> {{ edit_form.content() }} </p>
+        
+    </form>
+</div>
+
+{% endblock %}

@@ -12,4 +12,8 @@ hi/
 ENVIRONMENT.txt
 hi.py
 mongo-backup/notes.md
+users_db.sqlite
 TODO
+
+# currently block
+sample_text/

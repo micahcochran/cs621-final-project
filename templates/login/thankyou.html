@@ -1,0 +1,11 @@
+{# This page is the destination when a user has completed registration. #}
+
+{% extends "base.html" %}
+{% block content %}
+
+
+<h2 class="settings-eb">Thank you for registering!</h2>
+
+<p class="settings"> Go <a href="{{ url_for('login') }}"> here to login</a>. </p>
+
+{% endblock %}

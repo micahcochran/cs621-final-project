@@ -3,11 +3,12 @@
     This template provides for two levels deep content.
     #}
 
-{# TODO onclick to copy to clipboard could be done in a more elegant way using more Javascript. #}
-
-{# moved search box to this template  #}
+{# TODO: onclick to copy a link to clipboard could be done in a more elegant
+    way using Javascript that modifies the DOM. #}
 
 {% extends "base.html" %}
+
+{% block subtitle %} — {{ title }} {% endblock %}
 
 {% block searchbox %}
 <form action="{{ url_for('search', doc_id=doc_id) }}">

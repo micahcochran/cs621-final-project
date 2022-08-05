@@ -1,0 +1,28 @@
+{# This page is a form for a user to register/signup. #}
+
+{% extends "base.html" %}
+
+{% block subtitle %} — Signup {% endblock %}
+
+{% block content %}
+
+<h2 class="settings-eb"> Register </h2>
+<main>
+<p class="settings"> Create your account. It is free and only takes a minute to complete. Sorry for the inconvenience.</p>
+<form method="POST" action="{{ url_for('signup') }}">
+    {{ signup_form.hidden_tag() }}
+    <table class="settings">
+    <tr> <td> {{ signup_form.first.label }}</td> <td>{{ signup_form.first() }} </td> </tr> 
+    <tr> <td> {{ signup_form.last.label }}</td> <td>{{ signup_form.last() }} </td> </tr>
+    <tr> <td> {{ signup_form.username.label }}</td> <td>{{ signup_form.username() }} </td> </tr>    
+    <tr> <td> {{ signup_form.email.label }}</td> <td>{{ signup_form.email() }} </td> </tr>
+    <tr> <td> {{ signup_form.password.label }}</td> <td>{{ signup_form.password() }} </td> </tr>   
+    <tr> <td> {{ signup_form.confirm_password.label }}</td> <td>{{ signup_form.confirm_password() }} </td> </tr>    
+    <tr> <td> {{ signup_form.submit() }} </td></tr>
+    </table>
+</form>
+
+<p class="settings"> Already have an account? <a href="{{ url_for('index') }}">Sign in</a></p>
+</main>
+
+{% endblock %}
