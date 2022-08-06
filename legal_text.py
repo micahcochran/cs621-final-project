@@ -163,6 +163,8 @@ def new_book():
             flash(f'Added book: {title}')
         else:
             flash('Failed to add book.')
+        
+        return redirect(url_for('settings'))
     
     return lt_render_template('new_book.html', newbook_form=newbook_form)
 
@@ -188,7 +190,7 @@ def set_delete_book(collection):
         flash(f'Deleted "{collection}"')
         if del_form.complete_delete.data:
             db.drop_collection(collection)
-            flash("and also entirely deleted the data in the database.")
+            flash(f'and also entirely deleted the data related to "{collection}" from the database.')
         
         return redirect(url_for('settings'))
 

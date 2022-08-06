@@ -5,6 +5,7 @@ submission/
 .vagrant/
 hi/
 mongo-backup/backup-2022-08-05/
+.vscode/
 
 # multiple files
 *.ipynb

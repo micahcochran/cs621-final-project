@@ -8,14 +8,14 @@ Final Project<br>
 
 ## Team
 Micah Cochran
-Everything was my work unless specified.
+Everything was my work unless specified.  This is noted below in [Attribution](#attribution), but this was more fully explained in my project report.
 
 ## Vagrant
 This is the preferred way to install the Legal Text website.
 
 System Requirements: 
 * Vagrant (developed on version 2.2.6)
-* Virtualbox  (developed on version 6.1.34)
+* a hypervisor - I used Virtualbox  (developed on version 6.1.34)
 
 
 ### From the console
