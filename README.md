@@ -10,8 +10,19 @@ Final Project<br>
 Micah Cochran
 Everything was my work unless specified.  This is noted below in [Attribution](#attribution), but this was more fully explained in my project report.
 
-## Vagrant
-This is the preferred way to install the Legal Text website.
+## Installation
+There are two methods to install Vagrant (preferred) and bare metal.
+
+First step is to download the software from GitHub.
+
+Either by (1) cloning the repo:
+```bash
+git clone https://github.com/micahcochran/cs621-final-project.git
+```
+OR (2) [download the ZIP file](https://github.com/micahcochran/cs621-final-project/archive/refs/heads/main.zip)
+
+### Vagrant
+Vagrant is the preferred way to install the Legal Text website.
 
 System Requirements: 
 * Vagrant (developed on version 2.2.6)
@@ -40,9 +51,7 @@ cd legal-text/
 Open your browser to http://192.168.59.10:5000/  This is the private network
 port.  Other ports have also been left open, so those might also work.
 
-## Bare metal
-
-This is another configuration.
+## Installation - Bare metal
 
 System Requirements:
 * Python 3.7+
@@ -68,7 +77,10 @@ Open your browser to http://localhost:5000/
 
 
 ## Vagrant notes
-The image for Vagrant uses Ubuntu 20.04, which has an end of life on April, 2025
+The Vagrant image uses Ubuntu 20.04, which has an end of life in April of 2025.  This is because at the time of development Ubuntu LTS 22.04 had some issues installing MongoDB.
+
+## Project Notes
+The parsing code, `parse_constitution.py`, scrape the text from the Alabama Constitution website.  It used the BeatifulSoup library to help with parses the HTML and store it in MongoDB.  Unfortunately, the parsing code has been lost, but the MongoDB dumps from tha code are in the project [/mongo-backup/dump/legal_text/].
 
 ## Attribution
 * Fonts are hosted by Google Fonts: 
