@@ -5,10 +5,12 @@ Project Title: Legal Text Website <br>
 Due: 2022-08-05<br>
 Final Project<br>
 
+## Description
+This is software that updates the usability and look of the Alabama Constitution's website.  For more information look [Legal Text Website](https://www.micahcochran.net/projects/legal-text/) on my website.
 
 ## Team
 Micah Cochran
-Everything was my work unless specified.  This is noted below in [Attribution](#attribution), but this was more fully explained in my project report.
+Everything was my work, unless specified.  This is noted below in [Attribution](#attribution), but this was more fully explained in my project report.
 
 ## Installation
 There are two methods to install Vagrant (preferred) and bare metal.
@@ -76,11 +78,10 @@ To run the web application:
 Open your browser to http://localhost:5000/
 
 
-## Vagrant notes
-The Vagrant image uses Ubuntu 20.04, which has an end of life in April of 2025.  This is because at the time of development Ubuntu LTS 22.04 had some issues installing MongoDB.
+## Notes
+The Vagrant image uses Ubuntu 20.04 (end of life in April of 2025).  At development time, Ubuntu LTS 22.04 had some issues installing MongoDB. Docker was investigated, but ran into a slightly more complicated configuration when using official MongoDB docker image.  (Vagrant is Virtual Machine software, where Docker is containerization.  These are similar, but Docker would be preferred for website software. )
 
-## Project Notes
-The parsing code, `parse_constitution.py`, scrape the text from the Alabama Constitution website.  It used the BeatifulSoup library to help with parses the HTML and store it in MongoDB.  Unfortunately, the parsing code has been lost, but the MongoDB dumps from tha code are in the project [/mongo-backup/dump/legal_text/].
+The parsing code, `parse_constitution.py`, scrape the text from the Alabama Constitution website.  It used the BeatifulSoup library to help with parses the HTML and store it in MongoDB.  Unfortunately, the parsing code has been lost, but the MongoDB dumps from tha code are in the project [/mongo-backup/dump/legal_text/](/mongo-backup/dump/legal_text/).
 
 ## Attribution
 * Fonts are hosted by Google Fonts: 
