@@ -19,7 +19,7 @@ First step is to download the software from GitHub.
 
 Either by (1) cloning the repo:
 ```bash
-git clone https://github.com/micahcochran/cs621-final-project.git
+git clone https://github.com/micahcochran/cs621-final-project.git legal-text
 ```
 OR (2) [download the ZIP file](https://github.com/micahcochran/cs621-final-project/archive/refs/heads/main.zip)
 
@@ -28,7 +28,7 @@ Vagrant is the preferred way to install the Legal Text website.
 
 System Requirements: 
 * Vagrant (developed on version 2.2.6)
-* a hypervisor - I used Virtualbox  (developed on version 6.1.34)
+* a hypervisor - developed using Virtualbox  (developed on version 6.1.34)
 
 
 ### From the console
@@ -51,7 +51,7 @@ cd legal-text/
 ```
 
 Open your browser to http://192.168.59.10:5000/  This is the private network
-port.  Other ports have also been left open, so those might also work.
+port.  The ports that are reported on the console by Flask are not likely to work.
 
 ## Installation - Bare metal
 
@@ -59,15 +59,29 @@ System Requirements:
 * Python 3.7+
 * Pip
 * MongoDB (developed on version 3.6.8)
-* Anaconda
+* ~~Anaconda~~
+* venv
 
-Go to terminal to the directory where the legal-text/ folder is located.
+If you are using Ubuntu Linux 20.04 LTS, you can run this command to install all of the prereqs:
+```base
+apt-get install -y python3 python3-pip python3-venv mongodb mongodb-server mongodb-clients mongo-tools
+```
+
+Later version of Ubuntu/Debian Linux do not include MonogoDB, so those have to be installed using other repositories.  You will want to install MongoDB Community Edition.
+<https://www.mongodb.com/docs/manual/administration/install-community/>
+
+Go to terminal to the directory where the legal-text/ folder is located. Make a virtual environment (venv) and install the python libraries.
 
 ```base
-conda create -n lt-env python=3.10
-conda activate lt-env
 cd legal-text/
+python3 -m venv lt-env
+conda activate lt-env
 pip install -r requirements.txt
+```
+
+Restore the MongoDB database from files:
+```bash
+mongorestore --db=legal_text ./mongo-backup/dump/legal_text/
 ```
 
 To run the web application:
