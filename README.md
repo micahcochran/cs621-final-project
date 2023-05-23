@@ -37,21 +37,12 @@ Go to the console and run the following commands
 vagrant up
 ```
 
-Vagrant will prompt for a network interface to bridge to.
+Note: If it complains about there being a newer version of the box run `vagrant box update` to update the box before installation.
 
-```bash
-vagrant ssh
-```
 
-That should give you a secure shell into an Ubuntu 20.04 Virtual Machine. Do the following to run.
-
-```bash
-cd legal-text/
-./legal-text.py
-```
-
-Open your browser to http://192.168.59.10:5000/  This is the private network
-port.  The ports that are reported on the console by Flask are not likely to work.
+The vagrant box will start and run the Legal Text website.
+Open your browser to http://localhost:5000/ Alternatively, use the private
+network address at http://192.168.59.10:5000/   
 
 ## Installation - Bare metal
 

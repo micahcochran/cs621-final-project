@@ -1,0 +1,20 @@
+# This file is a configuration file for systemd
+# Put it in the /etc/systemd/system/ folder.
+# (If you are running this manually, copy this file.  
+#   Then run `systemctl start legal-text` to start).
+# Intended for the Vagrant configuration, but with some small
+# path modifications could work with any configuration.
+#
+# See man page systemd.service(5) for documentation.
+
+[Unit]
+Description=Legal Text Flask Website Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/vagrant/legal_text/
+ExecStart=/usr/bin/python3 /home/vagrant/legal_text/legal_text.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

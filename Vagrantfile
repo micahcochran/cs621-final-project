@@ -28,7 +28,8 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
-  config.vm.network "forwarded_port", guest: 5000, host: 5050, protocol: "tcp", host_ip: "127.0.0.1"
+#  config.vm.network "forwarded_port", guest: 5000, host: 5050, protocol: "tcp", host_ip: "127.0.0.1"
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, protocol: "tcp", host_ip: "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -71,9 +72,15 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
      apt-get update
      apt-get install -y python3 python3-pip mongodb mongodb-server mongodb-clients mongo-tools
+     # delete the package cache
+     apt-get clean
      # install requirements using pip
      pip3 install -r /home/vagrant/legal_text/requirements.txt
-     # restore the database
-     mongorestore --db legal_text /home/vagrant/legal_text/mongo-backup/dump/legal_text/
+     # restore the MongoDB database
+     mongorestore --db=legal_text /home/vagrant/legal_text/mongo-backup/dump/legal_text/
+     # create service
+     cp /home/vagrant/legal_text/legal-text.service /etc/systemd/system/
+     # start tthe service (so that it will always be run on startup)
+     systemctl start legal-text
   SHELL
 end
